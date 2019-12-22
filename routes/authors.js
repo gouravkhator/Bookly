@@ -2,7 +2,7 @@ const express = require('express');
 const Author = require('../models/author');
 const router = express.Router();
 
-//all authors
+//all authors or searched author
 router.get('/', async (req, res) => {
     let searchOptions = {};
     if (req.query.name != null && req.query.name !== '') {
@@ -25,6 +25,7 @@ router.get('/new', (req, res) => {
 });
 
 //Create author route
+//POST request on submitiing new author creation
 router.post('/', async (req, res) => {
     const author = new Author({
         name: req.body.name
