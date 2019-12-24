@@ -1,8 +1,9 @@
 const express = require('express');
 const Author = require('../models/author');
+const Book = require('../models/book');
 const router = express.Router();
 
-//all authors or searched author
+//all authors or searched author on clicking search or all authors
 router.get('/', async (req, res) => {
     let searchOptions = {};
     if (req.query.name != null && req.query.name !== '') {
@@ -11,7 +12,6 @@ router.get('/', async (req, res) => {
     } //if nothing sent then all authors arefetched
     try {
         const authors = await Author.find(searchOptions); //finding authors with some search conditions
-        //fetching all of them
         res.render('authors/index', { authors, searchOptions: req.query });
     } catch{
         res.redirect('/');
@@ -19,13 +19,13 @@ router.get('/', async (req, res) => {
 
 });
 
-//new author
+//new author on clicking add author
 router.get('/new', (req, res) => {
     res.render('authors/new', { author: new Author() });
 });
 
 //Create author route
-//POST request on submitiing new author creation
+//POST request on submitting new author creation
 router.post('/', async (req, res) => {
     const author = new Author({
         name: req.body.name
@@ -33,8 +33,8 @@ router.post('/', async (req, res) => {
 
     try {
         const newAuthor = await author.save(); //after saving in db it returns that newAuthor with _id
-        //res.redirect(`authors/${newAuthor.id}`);
-        res.redirect(`authors/`);
+        //res.redirect(`/authors/${newAuthor.id}`);
+        res.redirect(`/authors`);
     } catch{
         res.render('authors/new', {
             author: author,
@@ -43,5 +43,67 @@ router.post('/', async (req, res) => {
     }
     //This code could be done normally but would use nested callbacks so async await is used
     //as author.save() is asynchronous so newAuthor will be populated only when it finishes its callback
+});
+
+//on view clicking
+router.get('/:id', async (req, res) => {
+    try {
+        const author = await Author.findById(req.params.id);
+        const books = await Book.find({ author: req.params.id }).limit(6).exec();
+        res.render('authors/show', {
+            author,
+            booksByAuthor: books
+        });
+    } catch{
+        res.redirect('/');
+    }
+});
+
+//on edit clicking
+router.get('/:id/edit', async (req, res) => {
+    try {
+        const author = await Author.findById(req.params.id);
+        res.render('authors/edit', { author });
+    } catch{
+        res.redirect('/authors');
+    }
+});
+
+//on update clicking
+router.put('/:id', async (req, res) => {
+    let author;
+    try {
+        author = await Author.findById(req.params.id);
+        author.name = req.body.name;
+        await author.save();
+        res.redirect(`/authors/${author.id}`);
+    } catch{
+        //as two awaits are there so 2 issue can occur : 1. author not found and 2. author updation not done.
+        if (author == null) {
+            res.redirect('/');
+        } else {
+            res.render('authors/edit', {
+                author: author,
+                errorMessage: 'Error updating author'
+            });
+        }
+    }
+});
+
+//on delete clicking
+router.delete('/:id', async (req, res) => {
+    let author;
+    try {
+        author = await Author.findById(req.params.id);
+        await author.remove();
+        res.redirect('/authors');
+    } catch{
+        //as two awaits are there so 2 issue can occur : 1. author not found and 2. author updation not done.
+        if (author == null) {
+            res.redirect('/');
+        } else {
+            res.redirect(`/authors/${author.id}`)
+        }
+    }
 });
 module.exports = router;

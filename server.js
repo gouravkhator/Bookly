@@ -8,6 +8,7 @@ const express = require('express');
 const app = express();
 const expressLayouts = require('express-ejs-layouts');
 const bodyParser = require('body-parser');
+const methodOverride = require('method-override');
 
 const indexRouter = require('./routes/index');
 const authorRouter = require('./routes/authors');
@@ -17,6 +18,7 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.set('layout', 'layouts/layout'); //to include header and footer in html to reuse
 app.use(expressLayouts);
+app.use(methodOverride('_method'));  //to request PUT or DELETE from ejs files and _method is our query which is assigned PUT or DELETE
 app.use(express.static('public')); //public folder for css and js files
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: false }));
 
@@ -40,4 +42,5 @@ app.listen(process.env.PORT || 3000); //process.env.PORT which is used in hostin
 _form_fields has some reusable form fields to be used in different pages
 views has authors folder , layouts, partials
 partials for reusable headers in diff. pages
+method-override works by overriding the form method attribute to value passed in the action tag
 */
