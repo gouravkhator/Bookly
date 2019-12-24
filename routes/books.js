@@ -2,21 +2,7 @@ const express = require('express');
 const Book = require('../models/book');
 const Author = require('../models/author');
 const router = express.Router();
-const path = require('path');
-const fs = require('fs');
-const uploadPath = path.join('public', Book.coverImgBasePath);
-const multer = require('multer');
 const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
-const upload = multer({
-    dest: uploadPath,
-    limits: {
-        fileSize: 1024 * 1024 * 3,
-    },
-    fileFilter: (req, file, callback) => {
-        callback(null, imageMimeTypes.includes(file.mimetype)); //if mimetype is included in my array then accept file else reject it
-        //which gives error after wards as file is required.
-    }
-});
 
 //all books routes
 router.get('/', async (req, res) => {
@@ -49,37 +35,24 @@ router.get('/new', async (req, res) => {
 });
 
 //Create book route
-router.post('/', upload.single('cover'), async (req, res) => {
-    //upload single file of name cover and set the file as an object to req (all behind the scenes)
-    const filename = (req.file != null ? req.file.filename : null);
+router.post('/', async (req, res) => {
     const book = new Book({
         title: req.body.title,
         author: req.body.author,
         publishDate: new Date(req.body.publishDate),
         pageCount: req.body.pageCount,
-        coverImageName: filename,
         description: req.body.description,
     });
-    //for files input we use multer dependency to maintain multi platform file input.
-    //In form attribute, use enctype = "multipart/form-data"
+    saveCover(book, req.body.cover);
     try {
         const newBook = await book.save();
         //res.redirect(`books/${newBook.id}`);
         res.redirect(`books`);
     } catch{
-        if (book.coverImageName != null) {
-            //if some fields are blank then also if book cover is uploaded it gets saved so we want to delete that from server
-            removeBookCover(book.coverImageName);
-        }
         renderNewPage(res, book, true);
     }
 });
 
-function removeBookCover(filename) {
-    fs.unlink(path.join(uploadPath, filename), (err) => {
-        if (err) console.error(err);
-    });
-}
 async function renderNewPage(res, book, hasError = false) {
     try {
         const authors = await Author.find({});
@@ -91,6 +64,15 @@ async function renderNewPage(res, book, hasError = false) {
         res.render('books/new', params);
     } catch{
         res.redirect('/books');
+    }
+}
+
+function saveCover(book, coverEncoded) {
+    if (coverEncoded == null) return;
+    const cover = JSON.parse(coverEncoded); //maybe it cannot be parsed to JSON so cover will be null so check that
+    if (cover != null && imageMimeTypes.includes(cover.type)) {
+        book.coverImage = new Buffer.from(cover.data, 'base64'); //as cover.data is encoded in base64 format so create a buffer
+        book.coverImageType = cover.type;
     }
 }
 module.exports = router;
