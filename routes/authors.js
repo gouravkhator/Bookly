@@ -100,10 +100,12 @@ router.delete('/:id', async (req, res) => {
     } catch{
         //as two awaits are there so 2 issue can occur : 1. author not found and 2. author updation not done.
         if (author == null) {
-            res.redirect('/');
+            res.redirect('/'); //as the person searched for non-existing id so redirect to home page 
         } else {
             res.redirect(`/authors/${author.id}`)
         }
     }
 });
 module.exports = router;
+
+//if the person changes something in url except what should be there, then redirect to home page
