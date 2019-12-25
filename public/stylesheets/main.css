@@ -1,0 +1,35 @@
+@import './shared/variables.css';
+@import './shared/fonts.css'; /* relative to this file works like require statements in nodejs*/
+@import './shared/header.css';
+@import './shared/buttons.css';
+
+:root{
+    font-family: 'Gotham Rounded';
+    font-size: 20px;
+    color:var(--color-text-light);
+}
+
+*, *::before, *::after{
+    box-sizing: border-box;
+}
+
+body{
+    background: linear-gradient(to right,var(--color-background-dark),var(--color-background-light));
+}
+
+.container{
+    max-width: 1200px;
+    margin: auto;
+    margin-bottom: 3rem;
+}
+
+.inner-container{
+    margin: 0 2rem;
+}
+
+.page-header{ /*header of each page(its not nav title)*/
+    font-size: 2rem;
+    font-weight: 500;
+}
+
+/*all main css is here which doesn't belong to any file or has less decoration to be in a new css file*/

@@ -1,0 +1,15 @@
+:root{
+    --color-base-hue: 200;
+    --color-danger-hue-offset: 180; /*as hue ranges from 0 to 360 and I want, danger btn to be opposite color of primary
+        so some calculations
+    */
+    --color-danger-hue: calc(var(--color-base-hue) - var(--color-danger-hue-offset));
+    --color-background-dark: hsl(var(--color-base-hue),100%,8%);
+    --color-background-light: hsl(var(--color-base-hue),100%,16%);
+    --color-text-light: hsl(var(--color-base-hue),100%,87%);
+}
+
+
+/*
+all main vars are here and specific vars like vars for buttons are in buttons.css etc.
+*/
