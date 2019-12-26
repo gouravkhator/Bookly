@@ -16,7 +16,6 @@
 
 .book-grid{
     display: grid;
-    /* justify-content: center; TODO: for smaller displays looks better */
     grid-gap: 2rem;
     grid-template-columns: repeat(auto-fit, var(--book-cover-width));
 }
@@ -34,7 +33,6 @@
 .book-details-label{
     font-size: 1.2rem;
     font-weight: 500;
-    /*align-self: flex-start; /*TODO: unnecessary to give*/
 }
 
 .book-details-grid{

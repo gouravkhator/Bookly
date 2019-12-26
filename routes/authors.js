@@ -9,9 +9,11 @@ router.get('/', async (req, res) => {
     if (req.query.name != null && req.query.name !== '') {
         searchOptions.name = new RegExp(req.query.name, 'i'); //i for case insensitive
         //so it searches for all possible expressions
-    } //if nothing sent then all authors arefetched
+    } //if nothing sent then all authors are fetched
     try {
         const authors = await Author.find(searchOptions); //finding authors with some search conditions
+        //error can only happen when mongodb is unable to access db
+        //if searched author is not found then all authors are returned. so no error there.
         res.render('authors/index', { authors, searchOptions: req.query });
     } catch{
         res.redirect('/');
@@ -33,8 +35,7 @@ router.post('/', async (req, res) => {
 
     try {
         const newAuthor = await author.save(); //after saving in db it returns that newAuthor with _id
-        //res.redirect(`/authors/${newAuthor.id}`);
-        res.redirect(`/authors`);
+        res.redirect(`/authors/${newAuthor.id}`);
     } catch{
         res.render('authors/new', {
             author: author,
@@ -109,3 +110,5 @@ router.delete('/:id', async (req, res) => {
 module.exports = router;
 
 //if the person changes something in url except what should be there, then redirect to home page
+//all find methods only give error when database or some fields cannot be accessed and 
+//that means if searched term is not present it will not give error. It will give the entire authors on find() method.

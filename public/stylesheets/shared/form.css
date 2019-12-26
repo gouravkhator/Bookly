@@ -77,8 +77,21 @@
     font-size: inherit; /*inherit the font size of its parent */
 }
 
+.form-item-required::after{
+    content: '*';
+}
+
 @media(max-width:600px){
-    
+    .form-row{
+        flex-direction: column;
+    }
+    .form-row-end{
+        flex-direction: row;
+    }
+    .form-item{
+        margin-left: 0;
+        margin-bottom: .5rem;
+    }
 }
 
 @media(max-width:400px){
