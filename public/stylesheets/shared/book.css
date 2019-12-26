@@ -1,0 +1,66 @@
+:root{
+    --book-cover-width: 200px;
+    --book-cover-width-large: 325px;
+    --book-cover-aspect-ratio: 0.75;
+}
+
+.book-cover{
+    width: var(--book-cover-width);
+    height: calc(var(--book-cover-width)/var(--book-cover-aspect-ratio));
+    /*as ratio here is taken as width/height */
+}
+
+.book-cover-large{
+    --book-cover-width: var(--book-cover-width-large);
+}
+
+.book-grid{
+    display: grid;
+    /* justify-content: center; TODO: for smaller displays looks better */
+    grid-gap: 2rem;
+    grid-template-columns: repeat(auto-fit, var(--book-cover-width));
+}
+
+.book-grid-large{
+    grid-template-columns: repeat(auto-fit, var(--book-cover-width-large));
+}
+
+/*Below is for books/show.ejs */
+/*book-details is for full book details including images also*/
+.book-details{
+    display: flex;
+}
+
+.book-details-label{
+    font-size: 1.2rem;
+    font-weight: 500;
+    /*align-self: flex-start; /*TODO: unnecessary to give*/
+}
+
+.book-details-grid{
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-columns: auto auto;
+    align-content: flex-start; /*to keep all at start of the flex*/
+    align-items: center; /* and vertically center*/
+}
+
+/*all items and content should be ideally at start of flex*/
+/*all btns in a grid in books/show.ejs */
+.book-details-btn-grid{
+    display: grid;
+    justify-items: flex-start; /*horizontally align each item to start*/
+    align-items: flex-start; /*vertically align each item to start*/
+    /*both alignment is done to align items to top left where flexbox starts*/
+    align-content: flex-start;
+    grid-template-areas: 
+        "edit delete"
+        "author author";
+    grid-gap: .5rem;
+    margin-top: .5rem;
+}
+
+.book-details-author-btn{
+    grid-area: author;
+    justify-self: stretch; /*as it was not taking full of its width*/
+}
