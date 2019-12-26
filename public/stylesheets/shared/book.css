@@ -64,3 +64,44 @@
     grid-area: author;
     justify-self: stretch; /*as it was not taking full of its width*/
 }
+
+@media(max-width:700px){
+    :root{
+        --book-cover-width: 150px;
+        --book-cover-width-large: 225px;
+        --book-cover-aspect-ratio: 0.72;
+    }
+    .book-grid{
+        justify-content: center;
+        grid-gap: 1.6rem;
+    }
+}
+
+@media(max-width:600px){
+    .book-details{
+        flex-direction: column;
+    }
+    .book-details > div:first-child{
+        display: flex;
+        margin-bottom: 1rem;
+    }
+    .book-details-btn-grid{
+        align-self: flex-end;
+        margin-left: 2rem;
+    }
+}
+
+@media(max-width:400px){
+    .book-details > div:first-child{
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .book-details-btn-grid{
+        align-self: center;
+        margin-left: 0rem;
+    }
+    .book-details-grid{
+        grid-gap: 0.4rem;
+    }
+}

@@ -7,3 +7,19 @@
 .author-name{
     font-size: 1.5rem;
 }
+
+@media(max-width:700px){
+    .author-name{
+        font-size: 1.4rem;
+    }
+}
+
+@media(max-width:500px){
+    .author-row{
+        flex-direction: column;   
+    }
+    .author-name{
+        font-size: 1.1rem;
+        margin-bottom: .5rem;
+    }
+}

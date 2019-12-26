@@ -10,7 +10,8 @@
     margin-bottom: .5rem;
 }
 .form-row-end{
-    justify-content: flex-end; /*pushes the row content to end this is for btn of forms which has class form-row and form-row-end and btn-row as it contains btns only*/
+    justify-content: flex-end; 
+    /*pushes the row content to end this is for btn of forms which has class form-row and form-row-end and btn-row as it contains btns only*/
 }
 
 .form-item{
@@ -74,6 +75,17 @@
 .filepond--drop-label{
     color: var(--color-text-light);
     font-size: inherit; /*inherit the font size of its parent */
+}
+
+@media(max-width:600px){
+    
+}
+
+@media(max-width:400px){
+    .form-item input, .form-item select, .form-item textarea{
+        padding: .2rem .3rem;
+        width:100%;
+    }
 }
 
 /*this file decorates all form inputs*/
