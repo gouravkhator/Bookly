@@ -80,7 +80,8 @@ router.put('/:id', async (req, res) => {
         book = await Book.findById(req.params.id);
         book.title = req.body.title;
         book.author = req.body.author;
-        book.publishDate = new Date(req.body.publishDate); //to get date and make it a timestamp with date and time fields also.
+        book.publishDate = new Date(req.body.publishDate);
+        //to get date and make it a timestamp with date and time fields also.
         book.pageCount = req.body.pageCount;
         book.description = req.body.description;
         //req.body.cover is a string of base64 format
@@ -89,6 +90,7 @@ router.put('/:id', async (req, res) => {
             saveCover(book, req.body.cover);
         }
         await book.save();
+        book = await Book.findById(req.params.id).populate('author').exec(); //to populate new author as object otherwise it will be blank
         res.render('books/show', { book });
     } catch{
         if (book == null)
@@ -142,13 +144,19 @@ async function renderFormPage(res, book, form, hasError = false) {
 
 function saveCover(book, coverEncoded) {
     if (coverEncoded == null) return;
-    const cover = JSON.parse(coverEncoded); //maybe it cannot be parsed to JSON so cover will be null so check that
-    if (cover != null && imageMimeTypes.includes(cover.type)) {
-        book.coverImage = new Buffer.from(cover.data, 'base64'); //as cover.data is encoded in base64 format so create a buffer
-        book.coverImageType = cover.type;
+    try {
+        const cover = JSON.parse(coverEncoded); //maybe it cannot be parsed to JSON so cover will be null so check that
+        if (cover != null && imageMimeTypes.includes(cover.type)) {
+            book.coverImage = new Buffer.from(cover.data, 'base64'); //as cover.data is encoded in base64 format so create a buffer
+            book.coverImageType = cover.type;
 
-        //cover.data is string which can be made to buffer in base64 format
-        //the path of image can be taken as "data:<type>;charset=utf-8;base64,<image-as-buffer>.toString(<from base 64>)"
+            //cover.data is string which can be made to buffer in base64 format
+            //the path of image can be taken as "data:<type>;charset=utf-8;base64,<image-as-buffer>.toString(<from base 64>)"
+        }
+    } catch{
+        //if JSON.parse cannot parse the string then make all properties null
+        book.coverImage = null;
+        book.coverImageType = null;
     }
 }
 module.exports = router;

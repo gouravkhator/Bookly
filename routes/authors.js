@@ -103,7 +103,17 @@ router.delete('/:id', async (req, res) => {
         if (author == null) {
             res.redirect('/'); //as the person searched for non-existing id so redirect to home page 
         } else {
-            res.redirect(`/authors/${author.id}`)
+            try {
+                const author = await Author.findById(req.params.id);
+                const books = await Book.find({ author: req.params.id }).limit(6).exec();
+                res.render('authors/show', {
+                    author,
+                    booksByAuthor: books,
+                    errorMessage: 'Cannot delete author with existing books'
+                });
+            } catch{
+                res.redirect('/');
+            }
         }
     }
 });
