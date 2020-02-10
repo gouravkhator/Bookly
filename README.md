@@ -1,5 +1,9 @@
 # Bookly
 A library for books, uploaded by users, for users
+
+Install all dependencies by:
+npm i
+
 Run this by:
 npm start
 
